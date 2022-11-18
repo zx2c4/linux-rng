@@ -55,4 +55,21 @@ struct rand_pool_info {
 #define GRND_RANDOM	0x0002
 #define GRND_INSECURE	0x0004
 
+/**
+ * struct vgetrandom_alloc_args - arguments for the vgetrandom_alloc syscall
+ *
+ * The arguments are described in the doc comment of vgetrandom_alloc.
+ *
+ * The structure is versioned by size and thus extensible. New struct members
+ * must go at the end of the struct and must be properly 64-bit aligned.
+ */
+struct vgetrandom_alloc_args {
+	__aligned_u64 flags;
+	__aligned_u64 num;
+	__aligned_u64 size_per_each;
+	__aligned_u64 bytes_allocated;
+};
+
+#define VGETRANDOM_ALLOC_ARGS_SIZE_VER0 32 /* sizeof first published struct */
+
 #endif /* _UAPI_LINUX_RANDOM_H */
