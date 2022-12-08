@@ -1397,7 +1397,12 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
 	VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
 	VM_BUG_ON_VMA(address < vma->vm_start ||
 			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
-	__folio_set_swapbacked(folio);
+	/*
+	 * VM_DROPPABLE mappings don't swap; instead they're just dropped when
+	 * under memory pressure.
+	 */
+	if (!(vma->vm_flags & VM_DROPPABLE))
+		__folio_set_swapbacked(folio);
 	__folio_set_anon(folio, vma, address, true);
 
 	if (likely(!folio_test_large(folio))) {
@@ -1837,6 +1842,14 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
 				smp_rmb();
 
 				/*
+				 * VM_DROPPABLE mappings should never be dirty,
+				 * unlike MADV_FREE mappings. Ensure this is
+				 * always the case.
+				 */
+				WARN_ON_ONCE((vma->vm_flags & VM_DROPPABLE) &&
+					     folio_test_dirty(folio));
+
+				/*
 				 * The only page refs must be one from isolation
 				 * plus the rmap(s) (dropped by discard:).
 				 */
@@ -1851,7 +1864,12 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
 				 * discarded. Remap the page to page table.
 				 */
 				set_pte_at(mm, address, pvmw.pte, pteval);
-				folio_set_swapbacked(folio);
+				/*
+				 * Unlike MADV_FREE mappings, VM_DROPPABLE ones
+				 * never get swap backed on failure to drop.
+				 */
+				if (!(vma->vm_flags & VM_DROPPABLE))
+					folio_set_swapbacked(folio);
 				ret = false;
 				page_vma_mapped_walk_done(&pvmw);
 				break;

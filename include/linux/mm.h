@@ -407,6 +407,13 @@ extern unsigned int kobjsize(const void *objp);
 #endif
 
 #ifdef CONFIG_64BIT
+#define VM_DROPPABLE_BIT	40
+#define VM_DROPPABLE		BIT(VM_DROPPABLE_BIT)
+#else
+#define VM_DROPPABLE		VM_NONE
+#endif
+
+#ifdef CONFIG_64BIT
 /* VM is sealed, in vm_flags */
 #define VM_SEALED	_BITUL(63)
 #endif
@@ -1385,7 +1392,7 @@ vm_fault_t finish_fault(struct vm_fault *vmf);
 
 static inline bool pte_dirty(pte_t pte, struct vm_area_struct *vma)
 {
-	return pte_dirty_novma(pte);
+	return pte_dirty_novma(pte) && !(vma->vm_flags & VM_DROPPABLE);
 }
 
 /*
