@@ -37,6 +37,8 @@
 #include <asm/irq_stack.h>
 #include <asm/fred.h>
 #include <asm/sev.h>			/* snp_dump_hva_rmpentry()	*/
+#include <asm/insn.h>			/* struct insn			*/
+#include <asm/insn-eval.h>		/* insn_fetch_from_user(), ...	*/
 
 #define CREATE_TRACE_POINTS
 #include <asm/trace/exceptions.h>
@@ -1415,6 +1417,23 @@ retry:
 	}
 
 	mmap_read_unlock(mm);
+
+	if (fault & VM_FAULT_SKIP_INSN) {
+		u8 buf[MAX_INSN_SIZE];
+		struct insn insn;
+		int nr_copied;
+
+		nr_copied = insn_fetch_from_user(regs, buf);
+		if (nr_copied <= 0)
+			return;
+
+		if (!insn_decode_from_regs(&insn, regs, buf, nr_copied))
+			return;
+
+		regs->ip += insn.length;
+		return;
+	}
+
 done:
 	if (likely(!(fault & VM_FAULT_ERROR)))
 		return;
