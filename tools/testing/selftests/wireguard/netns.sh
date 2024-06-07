@@ -1,4 +1,12 @@
 #!/bin/bash
+set -ex
+
+/vdso_test_getrandom
+/vdso_test_getrandom bench-single
+/vdso_test_chacha
+/droppable
+exit 0
+
 # SPDX-License-Identifier: GPL-2.0
 #
 # Copyright (C) 2015-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
