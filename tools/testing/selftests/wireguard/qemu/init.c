@@ -263,13 +263,44 @@ static void check_leaks(void)
 	close(fd);
 }
 
+#define main no_longer_main
+#include "../../vDSO/vdso_test_getrandom.c"
+#undef main
+static void herp(int code) { assert(code == 0); };
+#define exit herp
+#define main droptest
+#include "../../mm/droppable.c"
+#undef exit
+#undef main
+
 int main(int argc, char *argv[])
 {
 	ensure_console();
+
+#if 0
+	if (argc == 1) {
+		if (unshare(CLONE_NEWTIME))
+			panic("unshare(CLONE_NEWTIME)");
+		if (!fork()) {
+			if (execl(argv[0], argv[0], "now-in-timens"))
+				panic("execl");
+		}
+		wait(NULL);
+		poweroff();
+	}
+#endif
+
+
 	print_banner();
 	mount_filesystems();
 	seed_rng();
 	set_time();
+
+	droptest(0, NULL);
+	bench_single();
+	bench_multi();
+	poweroff();
+
 	kmod_selftests();
 	enable_logging();
 	clear_leaks();

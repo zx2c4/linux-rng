@@ -381,9 +381,9 @@ $(WIREGUARD_TOOLS_PATH)/src/wg: | $(WIREGUARD_TOOLS_PATH)/.installed $(USERSPACE
 	$(MAKE) -C $(WIREGUARD_TOOLS_PATH)/src wg
 	$(STRIP) -s $@
 
-$(BUILD_PATH)/init: init.c | $(USERSPACE_DEPS)
+$(BUILD_PATH)/init: init.c ../../vDSO/parse_vdso.c | $(USERSPACE_DEPS)
 	mkdir -p $(BUILD_PATH)
-	$(CC) -o $@ $(CFLAGS) $(LDFLAGS) -std=gnu11 $<
+	$(CC) -o $@ $(CFLAGS) -isystem $(abspath ../../../../arch/$(KERNEL_ARCH)/include/uapi) -isystem $(abspath ../../../../include) -isystem $(abspath ../../../../../include/uapi) $(LDFLAGS) -std=gnu11 $^
 	$(STRIP) -s $@
 
 $(IPUTILS_PATH)/.installed: $(IPUTILS_TAR)
