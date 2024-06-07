@@ -109,9 +109,9 @@ KERNEL_ARCH := x86_64
 KERNEL_BZIMAGE := $(KERNEL_BUILD_PATH)/arch/x86/boot/bzImage
 QEMU_VPORT_RESULT := virtio-serial-device
 ifeq ($(HOST_ARCH),$(ARCH))
-QEMU_MACHINE := -cpu host -machine microvm,accel=kvm,pit=off,pic=off,rtc=off -no-acpi
+QEMU_MACHINE := -cpu host -machine microvm,accel=kvm,pit=off,pic=off,rtc=off,acpi=off
 else
-QEMU_MACHINE := -cpu max -machine microvm -no-acpi
+QEMU_MACHINE := -cpu max -machine microvm,acpi=off
 endif
 else ifeq ($(ARCH),i686)
 CHOST := i686-linux-musl
@@ -120,9 +120,9 @@ KERNEL_ARCH := x86
 KERNEL_BZIMAGE := $(KERNEL_BUILD_PATH)/arch/x86/boot/bzImage
 QEMU_VPORT_RESULT := virtio-serial-device
 ifeq ($(subst x86_64,i686,$(HOST_ARCH)),$(ARCH))
-QEMU_MACHINE := -cpu host -machine microvm,accel=kvm,pit=off,pic=off,rtc=off -no-acpi
+QEMU_MACHINE := -cpu host -machine microvm,accel=kvm,pit=off,pic=off,rtc=off,acpi=off
 else
-QEMU_MACHINE := -cpu coreduo -machine microvm -no-acpi
+QEMU_MACHINE := -cpu coreduo -machine microvm,acpi=off
 endif
 else ifeq ($(ARCH),mips64)
 CHOST := mips64-linux-musl
@@ -381,9 +381,9 @@ $(WIREGUARD_TOOLS_PATH)/src/wg: | $(WIREGUARD_TOOLS_PATH)/.installed $(USERSPACE
 	$(MAKE) -C $(WIREGUARD_TOOLS_PATH)/src wg
 	$(STRIP) -s $@
 
-$(BUILD_PATH)/init: init.c | $(USERSPACE_DEPS)
+$(BUILD_PATH)/init: init.c ../../vDSO/parse_vdso.c | $(USERSPACE_DEPS)
 	mkdir -p $(BUILD_PATH)
-	$(CC) -o $@ $(CFLAGS) $(LDFLAGS) -std=gnu11 $<
+	$(CC) -o $@ $(CFLAGS) -isystem $(abspath ../../../../include) -isystem $(abspath ../../../../../include/uapi) $(LDFLAGS) -std=gnu11 $^
 	$(STRIP) -s $@
 
 $(IPUTILS_PATH)/.installed: $(IPUTILS_TAR)
