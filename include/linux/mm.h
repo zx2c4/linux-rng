@@ -1383,6 +1383,11 @@ void set_pte_range(struct vm_fault *vmf, struct folio *folio,
 vm_fault_t finish_fault(struct vm_fault *vmf);
 #endif
 
+static inline bool pte_dirty(pte_t pte, struct vm_area_struct *vma)
+{
+	return pte_dirty_novma(pte);
+}
+
 /*
  * Multiple processes may "see" the same page. E.g. for untouched
  * mappings of /dev/null, all processes see the same page full of

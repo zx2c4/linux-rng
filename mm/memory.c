@@ -1479,7 +1479,7 @@ static __always_inline void zap_present_folio_ptes(struct mmu_gather *tlb,
 
 	if (!folio_test_anon(folio)) {
 		ptent = get_and_clear_full_ptes(mm, addr, pte, nr, tlb->fullmm);
-		if (pte_dirty_novma(ptent)) {
+		if (pte_dirty(ptent, vma)) {
 			folio_mark_dirty(folio);
 			if (tlb_delay_rmap(tlb)) {
 				delay_rmap = true;

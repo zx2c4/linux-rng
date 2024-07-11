@@ -216,7 +216,7 @@ again:
 			migrate->cpages++;
 
 			/* Set the dirty flag on the folio now the pte is gone. */
-			if (pte_dirty_novma(pte))
+			if (pte_dirty(pte, vma))
 				folio_mark_dirty(folio);
 
 			/* Setup special migration page table entry */
@@ -232,7 +232,7 @@ again:
 			if (pte_present(pte)) {
 				if (pte_young(pte))
 					entry = make_migration_entry_young(entry);
-				if (pte_dirty_novma(pte))
+				if (pte_dirty(pte, vma))
 					entry = make_migration_entry_dirty(entry);
 			}
 			swp_pte = swp_entry_to_pte(entry);

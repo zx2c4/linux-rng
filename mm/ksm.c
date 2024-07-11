@@ -1304,7 +1304,7 @@ static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
 
 	anon_exclusive = PageAnonExclusive(&folio->page);
 	entry = ptep_get(pvmw.pte);
-	if (pte_write(entry) || pte_dirty_novma(entry) ||
+	if (pte_write(entry) || pte_dirty(entry, vma) ||
 	    anon_exclusive || mm_tlb_flush_pending(mm)) {
 		swapped = folio_test_swapcache(folio);
 		flush_cache_page(vma, pvmw.address, folio_pfn(folio));
@@ -1339,7 +1339,7 @@ static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
 			goto out_unlock;
 		}
 
-		if (pte_dirty_novma(entry))
+		if (pte_dirty(entry, vma))
 			folio_mark_dirty(folio);
 		entry = pte_mkclean(entry);
 

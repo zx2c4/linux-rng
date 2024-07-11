@@ -93,7 +93,7 @@ static int clean_record_pte(pte_t *pte, unsigned long addr,
 	struct clean_walk *cwalk = to_clean_walk(wpwalk);
 	pte_t ptent = ptep_get(pte);
 
-	if (pte_dirty_novma(ptent)) {
+	if (pte_dirty(ptent, vma)) {
 		pgoff_t pgoff = ((addr - walk->vma->vm_start) >> PAGE_SHIFT) +
 			walk->vma->vm_pgoff - cwalk->bitmap_pgoff;
 		pte_t old_pte = ptep_modify_prot_start(walk->vma, addr, pte);

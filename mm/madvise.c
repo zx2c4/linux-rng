@@ -763,7 +763,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
 			folio_unlock(folio);
 		}
 
-		if (pte_young(ptent) || pte_dirty_novma(ptent)) {
+		if (pte_young(ptent) || pte_dirty(ptent, vma)) {
 			clear_young_dirty_ptes(vma, addr, pte, nr, cydp_flags);
 			tlb_remove_tlb_entries(tlb, pte, nr, addr);
 		}

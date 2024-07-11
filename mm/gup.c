@@ -990,7 +990,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
 	}
 	if (flags & FOLL_TOUCH) {
 		if ((flags & FOLL_WRITE) &&
-		    !pte_dirty_novma(pte) && !PageDirty(page))
+		    !pte_dirty(pte, vma) && !PageDirty(page))
 			set_page_dirty(page);
 		/*
 		 * pte_mkyoung() would be more correct here, but atomic care

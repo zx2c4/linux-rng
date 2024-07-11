@@ -78,7 +78,7 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
 	 * FS was already notified and we can simply mark the PTE writable
 	 * just like the write-fault handler would do.
 	 */
-	return pte_dirty_novma(pte);
+	return pte_dirty(pte, vma);
 }
 
 static long change_pte_range(struct mmu_gather *tlb,
