@@ -680,7 +680,7 @@ static inline pte_t get_and_clear_full_ptes(struct mm_struct *mm,
 		ptep++;
 		addr += PAGE_SIZE;
 		tmp_pte = ptep_get_and_clear_full(mm, addr, ptep, full);
-		if (pte_dirty(tmp_pte))
+		if (pte_dirty_novma(tmp_pte))
 			pte = pte_mkdirty(pte);
 		if (pte_young(tmp_pte))
 			pte = pte_mkyoung(pte);

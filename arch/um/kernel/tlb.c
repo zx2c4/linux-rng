@@ -230,7 +230,7 @@ static inline int update_pte_range(pmd_t *pmd, unsigned long addr,
 		if (!pte_young(*pte)) {
 			r = 0;
 			w = 0;
-		} else if (!pte_dirty(*pte))
+		} else if (!pte_dirty_novma(*pte))
 			w = 0;
 
 		prot = ((r ? UM_PROT_READ : 0) | (w ? UM_PROT_WRITE : 0) |
@@ -491,7 +491,7 @@ void flush_tlb_page(struct vm_area_struct *vma, unsigned long address)
 	if (!pte_young(*pte)) {
 		r = 0;
 		w = 0;
-	} else if (!pte_dirty(*pte)) {
+	} else if (!pte_dirty_novma(*pte)) {
 		w = 0;
 	}
 

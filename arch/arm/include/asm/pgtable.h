@@ -182,7 +182,7 @@ static inline pte_t *pmd_page_vaddr(pmd_t pmd)
 #define pte_valid(pte)		(pte_isset((pte), L_PTE_VALID))
 #define pte_accessible(mm, pte)	(mm_tlb_flush_pending(mm) ? pte_present(pte) : pte_valid(pte))
 #define pte_write(pte)		(pte_isclear((pte), L_PTE_RDONLY))
-#define pte_dirty(pte)		(pte_isset((pte), L_PTE_DIRTY))
+#define pte_dirty_novma(pte)	(pte_isset((pte), L_PTE_DIRTY))
 #define pte_young(pte)		(pte_isset((pte), L_PTE_YOUNG))
 #define pte_exec(pte)		(pte_isclear((pte), L_PTE_XN))
 

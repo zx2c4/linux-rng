@@ -375,7 +375,7 @@ static inline int pte_huge(pte_t pte)
 	return pte_present(pte) && (pte_val(pte) & _PAGE_LEAF);
 }
 
-static inline int pte_dirty(pte_t pte)
+static inline int pte_dirty_novma(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_DIRTY;
 }
@@ -677,7 +677,7 @@ static inline int pud_write(pud_t pud)
 #define pmd_dirty pmd_dirty
 static inline int pmd_dirty(pmd_t pmd)
 {
-	return pte_dirty(pmd_pte(pmd));
+	return pte_dirty_novma(pmd_pte(pmd));
 }
 
 #define pmd_young pmd_young

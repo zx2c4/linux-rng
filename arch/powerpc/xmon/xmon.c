@@ -3292,7 +3292,7 @@ static void format_pte(void *ptep, unsigned long pte)
 
 	printf("Flags = %s%s%s%s%s\n",
 	       pte_young(entry) ? "Accessed " : "",
-	       pte_dirty(entry) ? "Dirty " : "",
+	       pte_dirty_novma(entry) ? "Dirty " : "",
 	       pte_read(entry)  ? "Read " : "",
 	       pte_write(entry) ? "Write " : "",
 	       pte_exec(entry)  ? "Exec " : "");

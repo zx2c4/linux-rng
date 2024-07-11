@@ -24,6 +24,9 @@ PTE Page Table Helpers
 +---------------------------+--------------------------------------------------+
 | pte_dirty                 | Tests a dirty PTE                                |
 +---------------------------+--------------------------------------------------+
+| pte_dirty_novma           | Tests a dirty PTE without taking into account    |
+|                           | any attribute of the associated VMA.             |
++---------------------------+--------------------------------------------------+
 | pte_write                 | Tests a writable PTE                             |
 +---------------------------+--------------------------------------------------+
 | pte_special               | Tests a special PTE                              |

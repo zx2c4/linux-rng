@@ -78,7 +78,7 @@
 #ifndef __ASSEMBLY__
 
 #define pte_write(pte)		(pte_val(pte) & _PAGE_WRITE)
-#define pte_dirty(pte)		(pte_val(pte) & _PAGE_DIRTY)
+#define pte_dirty_novma(pte)	(pte_val(pte) & _PAGE_DIRTY)
 #define pte_young(pte)		(pte_val(pte) & _PAGE_ACCESSED)
 #define pte_special(pte)	(pte_val(pte) & _PAGE_SPECIAL)
 

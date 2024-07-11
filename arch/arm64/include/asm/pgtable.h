@@ -123,7 +123,7 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
 
 #define pte_hw_dirty(pte)	(pte_write(pte) && !pte_rdonly(pte))
 #define pte_sw_dirty(pte)	(!!(pte_val(pte) & PTE_DIRTY))
-#define pte_dirty(pte)		(pte_sw_dirty(pte) || pte_hw_dirty(pte))
+#define pte_dirty_novma(pte)	(pte_sw_dirty(pte) || pte_hw_dirty(pte))
 
 #define pte_valid(pte)		(!!(pte_val(pte) & PTE_VALID))
 #define pte_present_invalid(pte) \
@@ -357,7 +357,7 @@ static inline void __check_safe_pte_update(struct mm_struct *mm, pte_t *ptep,
 	VM_WARN_ONCE(!pte_young(pte),
 		     "%s: racy access flag clearing: 0x%016llx -> 0x%016llx",
 		     __func__, pte_val(old_pte), pte_val(pte));
-	VM_WARN_ONCE(pte_write(old_pte) && !pte_dirty(pte),
+	VM_WARN_ONCE(pte_write(old_pte) && !pte_dirty_novma(pte),
 		     "%s: racy dirty state clearing: 0x%016llx -> 0x%016llx",
 		     __func__, pte_val(old_pte), pte_val(pte));
 	VM_WARN_ONCE(!pgattr_change_is_safe(pte_val(old_pte), pte_val(pte)),
@@ -542,7 +542,7 @@ static inline int pmd_trans_huge(pmd_t pmd)
 }
 #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 
-#define pmd_dirty(pmd)		pte_dirty(pmd_pte(pmd))
+#define pmd_dirty(pmd)		pte_dirty_novma(pmd_pte(pmd))
 #define pmd_young(pmd)		pte_young(pmd_pte(pmd))
 #define pmd_valid(pmd)		pte_valid(pmd_pte(pmd))
 #define pmd_user(pmd)		pte_user(pmd_pte(pmd))
@@ -1226,7 +1226,7 @@ static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
 		ptep++;
 		addr += PAGE_SIZE;
 		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
-		if (pte_dirty(tmp_pte))
+		if (pte_dirty_novma(tmp_pte))
 			pte = pte_mkdirty(pte);
 		if (pte_young(tmp_pte))
 			pte = pte_mkyoung(pte);

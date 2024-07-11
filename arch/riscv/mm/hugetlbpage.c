@@ -17,7 +17,7 @@ pte_t huge_ptep_get(pte_t *ptep)
 	for (i = 0; i < pte_num; i++, ptep++) {
 		pte_t pte = ptep_get(ptep);
 
-		if (pte_dirty(pte))
+		if (pte_dirty_novma(pte))
 			orig_pte = pte_mkdirty(orig_pte);
 
 		if (pte_young(pte))
@@ -156,7 +156,7 @@ static pte_t get_clear_contig(struct mm_struct *mm,
 	for (i = 0; i < pte_num; i++, addr += PAGE_SIZE, ptep++) {
 		pte_t pte = ptep_get_and_clear(mm, addr, ptep);
 
-		if (pte_dirty(pte))
+		if (pte_dirty_novma(pte))
 			orig_pte = pte_mkdirty(orig_pte);
 
 		if (pte_young(pte))
@@ -279,7 +279,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
 	ptep = huge_pte_offset(mm, addr, napot_cont_size(order));
 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
 
-	if (pte_dirty(orig_pte))
+	if (pte_dirty_novma(orig_pte))
 		pte = pte_mkdirty(pte);
 
 	if (pte_young(orig_pte))

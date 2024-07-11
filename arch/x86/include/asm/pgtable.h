@@ -124,7 +124,7 @@ extern pmdval_t early_pmd_flags;
  * The following only work if pte_present() is true.
  * Undefined behaviour if not..
  */
-static inline bool pte_dirty(pte_t pte)
+static inline bool pte_dirty_novma(pte_t pte)
 {
 	return pte_flags(pte) & _PAGE_DIRTY_BITS;
 }

@@ -900,7 +900,7 @@ static inline int pte_write(pte_t pte)
 	return (pte_val(pte) & _PAGE_WRITE) != 0;
 }
 
-static inline int pte_dirty(pte_t pte)
+static inline int pte_dirty_novma(pte_t pte)
 {
 	return (pte_val(pte) & _PAGE_DIRTY) != 0;
 }

@@ -156,7 +156,7 @@ book3e_hugetlb_preload(struct vm_area_struct *vma, unsigned long ea, pte_t pte)
 	mas2 |= (pte_val(pte) >> PTE_WIMGE_SHIFT) & MAS2_WIMGE_MASK;
 	mas7_3 = (u64)pte_pfn(pte) << PAGE_SHIFT;
 	mas7_3 |= (pte_val(pte) >> PTE_BAP_SHIFT) & MAS3_BAP_MASK;
-	if (!pte_dirty(pte))
+	if (!pte_dirty_novma(pte))
 		mas7_3 &= ~(MAS3_SW|MAS3_UW);
 
 	mtspr(SPRN_MAS1, mas1);

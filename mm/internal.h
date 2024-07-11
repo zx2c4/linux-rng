@@ -181,7 +181,7 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
 		if (any_young)
 			young = !!pte_young(pte);
 		if (any_dirty)
-			dirty = !!pte_dirty(pte);
+			dirty = !!pte_dirty_novma(pte);
 		pte = __pte_batch_clear_ignored(pte, flags);
 
 		if (!pte_same(pte, expected_pte))

@@ -676,7 +676,7 @@ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
 {
 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
 	int batch;
-	bool writable = pte_dirty(pteval);
+	bool writable = pte_dirty_novma(pteval);
 
 	if (!pte_accessible(mm, pteval))
 		return;
@@ -1022,7 +1022,7 @@ static int page_vma_mkclean_one(struct page_vma_mapped_walk *pvmw)
 			pte_t *pte = pvmw->pte;
 			pte_t entry = ptep_get(pte);
 
-			if (!pte_dirty(entry) && !pte_write(entry))
+			if (!pte_dirty_novma(entry) && !pte_write(entry))
 				continue;
 
 			flush_cache_page(vma, address, pte_pfn(entry));
@@ -1772,7 +1772,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
 		pte_install_uffd_wp_if_needed(vma, address, pvmw.pte, pteval);
 
 		/* Set the dirty flag on the folio now the pte is gone. */
-		if (pte_dirty(pteval))
+		if (pte_dirty_novma(pteval))
 			folio_mark_dirty(folio);
 
 		/* Update high watermark before we lower rss */
@@ -2135,7 +2135,7 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
 		}
 
 		/* Set the dirty flag on the folio now the pte is gone. */
-		if (pte_dirty(pteval))
+		if (pte_dirty_novma(pteval))
 			folio_mark_dirty(folio);
 
 		/* Update high watermark before we lower rss */
@@ -2253,7 +2253,7 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
 							page_to_pfn(subpage));
 			if (pte_young(pteval))
 				entry = make_migration_entry_young(entry);
-			if (pte_dirty(pteval))
+			if (pte_dirty_novma(pteval))
 				entry = make_migration_entry_dirty(entry);
 			swp_pte = swp_entry_to_pte(entry);
 			if (pte_soft_dirty(pteval))
@@ -2381,7 +2381,7 @@ static bool page_make_device_exclusive_one(struct folio *folio,
 		pteval = ptep_clear_flush(vma, address, pvmw.pte);
 
 		/* Set the dirty flag on the folio now the pte is gone. */
-		if (pte_dirty(pteval))
+		if (pte_dirty_novma(pteval))
 			folio_mark_dirty(folio);
 
 		/*

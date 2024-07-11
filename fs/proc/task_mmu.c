@@ -537,7 +537,7 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
 	if (pte_present(ptent)) {
 		page = vm_normal_page(vma, addr, ptent);
 		young = pte_young(ptent);
-		dirty = pte_dirty(ptent);
+		dirty = pte_dirty_novma(ptent);
 	} else if (is_swap_pte(ptent)) {
 		swp_entry_t swpent = pte_to_swp_entry(ptent);
 
@@ -2671,7 +2671,7 @@ static int gather_pte_stats(pmd_t *pmd, unsigned long addr,
 		struct page *page = can_gather_numa_stats(ptent, vma, addr);
 		if (!page)
 			continue;
-		gather_stats(page, md, pte_dirty(ptent), 1);
+		gather_stats(page, md, pte_dirty_novma(ptent), 1);
 
 	} while (pte++, addr += PAGE_SIZE, addr != end);
 	pte_unmap_unlock(orig_pte, ptl);
@@ -2692,7 +2692,7 @@ static int gather_hugetlb_stats(pte_t *pte, unsigned long hmask,
 	page = pte_page(huge_pte);
 
 	md = walk->private;
-	gather_stats(page, md, pte_dirty(huge_pte), 1);
+	gather_stats(page, md, pte_dirty_novma(huge_pte), 1);
 	return 0;
 }
 

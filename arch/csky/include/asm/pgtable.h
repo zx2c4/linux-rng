@@ -148,7 +148,7 @@ static inline int pte_write(pte_t pte)
 	return (pte).pte_low & _PAGE_WRITE;
 }
 
-static inline int pte_dirty(pte_t pte)
+static inline int pte_dirty_novma(pte_t pte)
 {
 	return (pte).pte_low & _PAGE_MODIFIED;
 }

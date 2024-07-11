@@ -279,7 +279,7 @@ static inline int pte_young(pte_t pte)
 }
 
 /* pte_dirty - "is PTE dirty?" */
-static inline int pte_dirty(pte_t pte)
+static inline int pte_dirty_novma(pte_t pte)
 {
 	return pte_val(pte) & _PAGE_DIRTY;
 }

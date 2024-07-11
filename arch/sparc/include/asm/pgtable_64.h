@@ -358,7 +358,7 @@ static inline pgprot_t pgprot_noncached(pgprot_t prot)
  */
 #define pgprot_noncached pgprot_noncached
 
-static inline unsigned long pte_dirty(pte_t pte)
+static inline unsigned long pte_dirty_novma(pte_t pte)
 {
 	unsigned long mask;
 
@@ -534,7 +534,7 @@ static inline pte_t pte_mkwrite_novma(pte_t pte)
 	: "i" (_PAGE_WRITE_4U), "i" (_PAGE_WRITE_4V));
 
 	pte = __pte(val | mask);
-	return pte_dirty(pte) ? __pte_mkhwwrite(pte) : pte;
+	return pte_dirty_novma(pte) ? __pte_mkhwwrite(pte) : pte;
 }
 
 static inline pte_t pte_wrprotect(pte_t pte)
@@ -711,7 +711,7 @@ static inline unsigned long pmd_dirty(pmd_t pmd)
 {
 	pte_t pte = __pte(pmd_val(pmd));
 
-	return pte_dirty(pte);
+	return pte_dirty_novma(pte);
 }
 
 #define pmd_young pmd_young

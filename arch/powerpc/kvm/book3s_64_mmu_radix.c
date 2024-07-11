@@ -1117,7 +1117,7 @@ static int kvm_radix_test_clear_dirty(struct kvm *kvm,
 		return 0;
 
 	pte = READ_ONCE(*ptep);
-	if (pte_present(pte) && pte_dirty(pte)) {
+	if (pte_present(pte) && pte_dirty_novma(pte)) {
 		spin_lock(&kvm->mmu_lock);
 		/*
 		 * Recheck the pte again
@@ -1129,7 +1129,7 @@ static int kvm_radix_test_clear_dirty(struct kvm *kvm,
 			 * to use the pte addr returned by above page table
 			 * walk.
 			 */
-			if (!pte_present(*ptep) || !pte_dirty(*ptep)) {
+			if (!pte_present(*ptep) || !pte_dirty_novma(*ptep)) {
 				spin_unlock(&kvm->mmu_lock);
 				return 0;
 			}

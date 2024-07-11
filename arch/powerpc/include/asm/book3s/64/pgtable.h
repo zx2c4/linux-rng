@@ -453,7 +453,7 @@ static inline void pte_clear(struct mm_struct *mm, unsigned long addr,
 	pte_update(mm, addr, ptep, ~0UL, 0, 0);
 }
 
-static inline int pte_dirty(pte_t pte)
+static inline int pte_dirty_novma(pte_t pte)
 {
 	return !!(pte_raw(pte) & cpu_to_be64(_PAGE_DIRTY));
 }
@@ -909,7 +909,7 @@ static inline pte_t *pudp_ptep(pud_t *pud)
 }
 
 #define pud_pfn(pud)		pte_pfn(pud_pte(pud))
-#define pud_dirty(pud)		pte_dirty(pud_pte(pud))
+#define pud_dirty(pud)		pte_dirty_novma(pud_pte(pud))
 #define pud_young(pud)		pte_young(pud_pte(pud))
 #define pud_mkold(pud)		pte_pud(pte_mkold(pud_pte(pud)))
 #define pud_wrprotect(pud)	pte_pud(pte_wrprotect(pud_pte(pud)))
@@ -1054,7 +1054,7 @@ static inline pte_t *pmdp_ptep(pmd_t *pmd)
 	return (pte_t *)pmd;
 }
 #define pmd_pfn(pmd)		pte_pfn(pmd_pte(pmd))
-#define pmd_dirty(pmd)		pte_dirty(pmd_pte(pmd))
+#define pmd_dirty(pmd)		pte_dirty_novma(pmd_pte(pmd))
 #define pmd_young(pmd)		pte_young(pmd_pte(pmd))
 #define pmd_mkold(pmd)		pte_pmd(pte_mkold(pmd_pte(pmd)))
 #define pmd_wrprotect(pmd)	pte_pmd(pte_wrprotect(pmd_pte(pmd)))

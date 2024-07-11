@@ -31,7 +31,7 @@ void __ksm_exit(struct mm_struct *mm);
  * in the PTE. If the PTE is dirty, the zeropage was mapped by KSM when
  * deduplicating memory.
  */
-#define is_ksm_zero_pte(pte)	(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte))
+#define is_ksm_zero_pte(pte)	(is_zero_pfn(pte_pfn(pte)) && pte_dirty_novma(pte))
 
 extern atomic_long_t ksm_zero_pages;
 

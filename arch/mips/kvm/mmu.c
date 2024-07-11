@@ -504,7 +504,7 @@ static int _kvm_mips_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa,
 		pfn_valid = true;
 		/* call kvm_set_pfn_accessed() after unlock */
 	}
-	if (write_fault && !pte_dirty(*ptep)) {
+	if (write_fault && !pte_dirty_novma(*ptep)) {
 		if (!pte_write(*ptep)) {
 			ret = -EFAULT;
 			goto out;

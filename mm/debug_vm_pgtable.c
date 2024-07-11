@@ -90,17 +90,17 @@ static void __init pte_basic_tests(struct pgtable_debug_args *args, int idx)
 	 * important for platforms like arm64 where (!PTE_RDONLY) indicate
 	 * dirty bit being set.
 	 */
-	WARN_ON(pte_dirty(pte_wrprotect(pte)));
+	WARN_ON(pte_dirty_novma(pte_wrprotect(pte)));
 
 	WARN_ON(!pte_same(pte, pte));
 	WARN_ON(!pte_young(pte_mkyoung(pte_mkold(pte))));
-	WARN_ON(!pte_dirty(pte_mkdirty(pte_mkclean(pte))));
+	WARN_ON(!pte_dirty_novma(pte_mkdirty(pte_mkclean(pte))));
 	WARN_ON(!pte_write(pte_mkwrite(pte_wrprotect(pte), args->vma)));
 	WARN_ON(pte_young(pte_mkold(pte_mkyoung(pte))));
-	WARN_ON(pte_dirty(pte_mkclean(pte_mkdirty(pte))));
+	WARN_ON(pte_dirty_novma(pte_mkclean(pte_mkdirty(pte))));
 	WARN_ON(pte_write(pte_wrprotect(pte_mkwrite(pte, args->vma))));
-	WARN_ON(pte_dirty(pte_wrprotect(pte_mkclean(pte))));
-	WARN_ON(!pte_dirty(pte_wrprotect(pte_mkdirty(pte))));
+	WARN_ON(pte_dirty_novma(pte_wrprotect(pte_mkclean(pte))));
+	WARN_ON(!pte_dirty_novma(pte_wrprotect(pte_mkdirty(pte))));
 }
 
 static void __init pte_advanced_tests(struct pgtable_debug_args *args)
@@ -146,7 +146,7 @@ static void __init pte_advanced_tests(struct pgtable_debug_args *args)
 	pte = pte_mkdirty(pte);
 	ptep_set_access_flags(args->vma, args->vaddr, args->ptep, pte, 1);
 	pte = ptep_get(args->ptep);
-	WARN_ON(!(pte_write(pte) && pte_dirty(pte)));
+	WARN_ON(!(pte_write(pte) && pte_dirty_novma(pte)));
 	ptep_get_and_clear_full(args->mm, args->vaddr, args->ptep, 1);
 	pte = ptep_get(args->ptep);
 	WARN_ON(!pte_none(pte));

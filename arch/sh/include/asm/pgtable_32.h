@@ -337,7 +337,7 @@ static inline void set_pte(pte_t *ptep, pte_t pte)
  * Undefined behaviour if not..
  */
 #define pte_not_present(pte)	(!((pte).pte_low & _PAGE_PRESENT))
-#define pte_dirty(pte)		((pte).pte_low & _PAGE_DIRTY)
+#define pte_dirty_novma(pte)	((pte).pte_low & _PAGE_DIRTY)
 #define pte_young(pte)		((pte).pte_low & _PAGE_ACCESSED)
 #define pte_special(pte)	((pte).pte_low & _PAGE_SPECIAL)
 

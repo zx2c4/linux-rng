@@ -170,7 +170,7 @@ static inline int pte_exec(pte_t pte)
 	return pte_val(pte) & CF_PAGE_EXEC;
 }
 
-static inline int pte_dirty(pte_t pte)
+static inline int pte_dirty_novma(pte_t pte)
 {
 	return pte_val(pte) & CF_PAGE_DIRTY;
 }

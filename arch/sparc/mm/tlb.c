@@ -114,7 +114,7 @@ void tlb_batch_add(struct mm_struct *mm, unsigned long vaddr,
 		   unsigned int hugepage_shift)
 {
 	if (tlb_type != hypervisor &&
-	    pte_dirty(orig)) {
+	    pte_dirty_novma(orig)) {
 		unsigned long paddr, pfn = pte_pfn(orig);
 		struct address_space *mapping;
 		struct page *page;

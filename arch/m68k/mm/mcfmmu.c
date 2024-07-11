@@ -133,7 +133,7 @@ int cf_tlb_miss(struct pt_regs *regs, int write, int dtlb, int extension_word)
 
 	set_pte(pte, pte_mkyoung(*pte));
 	asid = mm->context & 0xff;
-	if (!pte_dirty(*pte) && !KMAPAREA(mmuar))
+	if (!pte_dirty_novma(*pte) && !KMAPAREA(mmuar))
 		set_pte(pte, pte_wrprotect(*pte));
 
 	mmutr = (mmuar & PAGE_MASK) | (asid << MMUTR_IDN) | MMUTR_V;

@@ -234,7 +234,7 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
 		pte = *pte_offset_kernel(pmdp, vaddr);
 
 	if (unlikely(!pte_present(pte) ||
-		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
+		     (write && (!pte_write(pte) || !pte_dirty_novma(pte)))))
 		return 1;
 
 	*paddr = pte_pfn(pte) << PAGE_SHIFT;

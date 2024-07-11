@@ -61,7 +61,7 @@ static void contpte_convert(struct mm_struct *mm, unsigned long addr,
 	for (i = 0; i < CONT_PTES; i++, ptep++, addr += PAGE_SIZE) {
 		pte_t ptent = __ptep_get_and_clear(mm, addr, ptep);
 
-		if (pte_dirty(ptent))
+		if (pte_dirty_novma(ptent))
 			pte = pte_mkdirty(pte);
 
 		if (pte_young(ptent))
@@ -169,7 +169,7 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
 	for (i = 0; i < CONT_PTES; i++, ptep++) {
 		pte = __ptep_get(ptep);
 
-		if (pte_dirty(pte))
+		if (pte_dirty_novma(pte))
 			orig_pte = pte_mkdirty(orig_pte);
 
 		if (pte_young(pte))
@@ -226,7 +226,7 @@ retry:
 		   pgprot_val(prot) != pgprot_val(orig_prot))
 			goto retry;
 
-		if (pte_dirty(pte))
+		if (pte_dirty_novma(pte))
 			orig_pte = pte_mkdirty(orig_pte);
 
 		if (pte_young(pte))

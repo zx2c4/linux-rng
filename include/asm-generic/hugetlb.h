@@ -17,7 +17,7 @@ static inline unsigned long huge_pte_write(pte_t pte)
 
 static inline unsigned long huge_pte_dirty(pte_t pte)
 {
-	return pte_dirty(pte);
+	return pte_dirty_novma(pte);
 }
 
 static inline pte_t huge_pte_mkwrite(pte_t pte)

@@ -140,7 +140,7 @@ pte_t huge_ptep_get(pte_t *ptep)
 	for (i = 0; i < ncontig; i++, ptep++) {
 		pte_t pte = __ptep_get(ptep);
 
-		if (pte_dirty(pte))
+		if (pte_dirty_novma(pte))
 			orig_pte = pte_mkdirty(orig_pte);
 
 		if (pte_young(pte))
@@ -174,7 +174,7 @@ static pte_t get_clear_contig(struct mm_struct *mm,
 		 * the dirty or accessed bit for any page in the set,
 		 * so check them all.
 		 */
-		if (pte_dirty(pte))
+		if (pte_dirty_novma(pte))
 			orig_pte = pte_mkdirty(orig_pte);
 
 		if (pte_young(pte))
@@ -419,7 +419,7 @@ static int __cont_access_flags_changed(pte_t *ptep, pte_t pte, int ncontig)
 	for (i = 0; i < ncontig; i++) {
 		pte_t orig_pte = __ptep_get(ptep + i);
 
-		if (pte_dirty(pte) != pte_dirty(orig_pte))
+		if (pte_dirty_novma(pte) != pte_dirty_novma(orig_pte))
 			return 1;
 
 		if (pte_young(pte) != pte_young(orig_pte))
@@ -452,7 +452,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
 
 	/* Make sure we don't lose the dirty or young state */
-	if (pte_dirty(orig_pte))
+	if (pte_dirty_novma(orig_pte))
 		pte = pte_mkdirty(pte);
 
 	if (pte_young(orig_pte))

@@ -144,7 +144,7 @@ static inline void load_ksp_mmu(struct task_struct *task)
 
 	set_pte(pte, pte_mkyoung(*pte));
 	asid = mm->context & 0xff;
-	if (!pte_dirty(*pte) && mmuar <= PAGE_OFFSET)
+	if (!pte_dirty_novma(*pte) && mmuar <= PAGE_OFFSET)
 		set_pte(pte, pte_wrprotect(*pte));
 
 	mmu_write(MMUTR, (mmuar & PAGE_MASK) | (asid << MMUTR_IDN) |
